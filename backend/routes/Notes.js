@@ -7,6 +7,7 @@ const notesRoutes = express.Router();
 // GET Routers
 notesRoutes.get("/notes", NotesController.getAllNotes);
 notesRoutes.get("/notes/:id", NotesController.getNoteByID);
+notesRoutes.get("/notes/search/:title", NotesController.searchNotesByTitle);
 
 // POST Routers
 notesRoutes.post("/notes", upload.single("image"), NotesController.addNote);

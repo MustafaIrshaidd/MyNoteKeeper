@@ -4,9 +4,22 @@ import NotesModel from "../models/NotesModel.js";
 
 export default {
   getAllNotes: async (req, res) => {
+    const pageNumber = req.query.page;
+    const startIndex = (pageNumber - 1) * 10;
     try {
-      const notes = await NotesModel.find();
-      res.json(notes);
+      let result;
+      if (isNaN(pageNumber) || pageNumber < 1) {
+        result = await NotesModel.find();
+      } else {
+        result = await NotesModel.find({}, null, {
+          skip: startIndex,
+          limit: 10,
+        });
+      }
+      if (!result) {
+        return res.status(404).json({ message: "no results" });
+      }
+      res.json(result);
     } catch (error) {
       console.error("Error:", error);
       res.status(500).send("Internal Server Error");
@@ -25,6 +38,37 @@ export default {
       res.status(500).send("Internal Server Error");
     }
   },
+  searchNotesByTitle: async (req, res) => {
+    const pageNumber = req.query.page;
+    const startIndex = (pageNumber - 1) * 10;
+    const searchTerm = req.params.title;
+    try {
+      let result;
+      if (isNaN(pageNumber) || pageNumber < 1) {
+        result = await NoteModel.find({
+          title: { $regex: searchTerm, $options: "i" },
+        });
+      } else {
+        result = await NoteModel.find(
+          {
+            title: { $regex: searchTerm, $options: "i" },
+          },
+          null,
+          {
+            skip: startIndex,
+            limit: 10,
+          }
+        );
+      }
+      if (!result) {
+        return res.status(404).json({ message: "no results" });
+      }
+      res.json(result);
+    } catch (error) {
+      console.error("Error:", error);
+      res.status(500).send("Internal Server Error");
+    }
+  },
   addNote: async (req, res) => {
     const { title, content } = req.body;
 
@@ -37,5 +81,4 @@ export default {
 
     res.send(response);
   },
-
 };
