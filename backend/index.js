@@ -4,9 +4,10 @@ import cors from "cors";
 import notesRoutes from "./routes/Notes.js";
 import databaseConnection from "./services/DatabaseConnection.js";
 
-
 // Create an Express app
 const app = express();
+
+app.use("/uploads", express.static("./images"));
 
 // Middleware setup
 app.use(express.json());
