@@ -13,7 +13,13 @@ notesRoutes.get("/notes/search/:title", NotesController.searchNotesByTitle);
 notesRoutes.post("/notes", upload.single("image"), NotesController.addNote);
 
 // DELETE Routers
+notesRoutes.delete("/notes/:id", NotesController.deleteNoteByID);
 
 // UPDATE Routers
+notesRoutes.put(
+  "/notes/:id",
+  upload.single("image"),
+  NotesController.updateNoteByID
+);
 
 export default notesRoutes;

@@ -1,6 +1,7 @@
 import NoteModel from "../models/NotesModel.js";
 import path from "path";
 import NotesModel from "../models/NotesModel.js";
+import fs from "fs";
 
 export default {
   getAllNotes: async (req, res) => {
@@ -80,5 +81,67 @@ export default {
     const response = await newNote.save();
 
     res.send(response);
+  },
+  deleteNoteByID: async (req, res) => {
+    try {
+      const _id = req.params.id;
+
+      const obj = await NoteModel.findOne({ _id });
+
+      if (obj && obj.image) {
+        await fs.unlink(`images/notes/${obj.image}`, (err) => {
+          if (err) {
+            console.error("Error deleting image:", err);
+          } else {
+            console.log("Image deleted successfully");
+          }
+        });
+      }
+
+      if (!obj) {
+        return res.status(404).json({ message: "not found" });
+      }
+
+      await NoteModel.deleteOne({ _id });
+
+      res.send({ status: "success" });
+    } catch (error) {
+      console.error("Error:", error);
+      res.status(500).send("Internal Server Error");
+    }
+  },
+  updateNoteByID: async (req, res) => {
+    try {
+      const _id = req.params.id;
+      const obj = await NoteModel.findOne({ _id });
+      const newObj = req.body;
+
+      if (!obj) {
+        return res.status(404).json({ message: "not found" });
+      }
+
+      if (req.file) {
+        const newImage = req.file.path;
+        const fileName = path.basename(newImage);
+        newObj.image = fileName;
+
+        if (obj && obj.image) {
+          await fs.unlink(`images/notes/${obj.image}`, (err) => {
+            if (err) {
+              console.error("Error deleting image:", err);
+            } else {
+              console.log("Image deleted successfully");
+            }
+          });
+        }
+      }
+
+      await NoteModel.updateOne({ _id }, { $set: newObj });
+
+      res.send({ status: "success" });
+    } catch (error) {
+      console.error("Error:", error);
+      res.status(500).send("Internal Server Error");
+    }
   },
 };
