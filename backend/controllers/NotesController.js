@@ -73,8 +73,9 @@ export default {
   addNote: async (req, res) => {
     const { title, content } = req.body;
 
-    const image = req.file.path;
-    const fileName = path.basename(image);
+    // const image = req.file.path;
+    // const fileName = path.basename(image);
+    const fileName = req.file.filename;
 
     const newNote = new NoteModel({ title, content, image: fileName });
 

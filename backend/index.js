@@ -6,14 +6,13 @@ import databaseConnection from "./services/DatabaseConnection.js";
 
 // Create an Express app
 const app = express();
-
+app.use(cors());
 app.use("/uploads", express.static("./images"));
 
 // Middleware setup
 app.use(express.json());
-app.use(cors());
 
-app.use(notesRoutes)
+app.use(notesRoutes);
 
 // Start the Express server
 app.listen(3000, () => {

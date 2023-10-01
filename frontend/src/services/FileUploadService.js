@@ -1,4 +1,4 @@
-const newUpload = (inputs, path, file, headers) => {
+const newUpload = (inputs, file) => {
   const formData = new FormData();
 
   if (file) formData.append("image", file);

@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Box, Button, Typography } from "@mui/material";
+import { Box, Button, Input } from "@mui/material";
 import Paper from "@mui/material/Paper";
 import Stack from "@mui/material/Stack";
 import { styled } from "@mui/material/styles";
@@ -42,14 +42,16 @@ const AddNote = () => {
     setIsClicked(true);
   };
 
-  const handleClose = (event) => {
-    event.stopPropagation();
+  const handleClose = async () => {
     const { image, previewImage, ...inputs } = formik.values;
 
-    console.log(inputs);
-    const formData = FileUploadService.newUpload(inputs, "/notes", image, {});
+    const formData = FileUploadService.newUpload(inputs, image);
 
-    addNote(formData);
+    console.log(await addNote(formData));
+
+    const title = document.getElementById("title").innerText="";
+    // formik.setFieldValue("title", "title");
+    // formik.setFieldValue("content", "Add A Note...");
 
     setIsClicked(false);
   };
@@ -60,7 +62,7 @@ const AddNote = () => {
   });
 
   const handleImageChange = async (file) => {
-    // const value = await formik.setFieldValue("image", file);
+    await formik.setFieldValue("image", file);
 
     if (formik.values.previewImage)
       await formik.setFieldValue("previewImage", "");
@@ -69,73 +71,102 @@ const AddNote = () => {
   };
 
   return (
-    <StyledPaper
-      sx={
-        isClicked
-          ? { height: { sm: "100%", lg: "108.5px" } }
-          : { height: "67px" }
-      }
-      elevation={3}
-      onClick={handleExpand}
-      isClicked={isClicked}>
-      <Stack
-        display={"flex"}
-        sx={{ flexDirection: { sm: "column", lg: "row" } }}
-        justifyContent={"space-between"}
-        flexGrow={1}>
-        <Box
-          sx={
-            isClicked
-              ? { display: "block", width: { sm: "100%", lg: "30%" } }
-              : { display: "none" }
-          }>
-          <FileField
-            image={formik.values.image}
-            onImageChange={handleImageChange}
-            onBlur={formik.handleBlur}
-            initialPreviewImage={formik.values.previewImage}
-            error={formik.touched.image && Boolean(formik.errors.image)}
-            helperText={formik.touched.image && formik.errors.image}
-            className={styles["file-input_large"]}
-          />
-        </Box>
+    <form
+      method="POST"
+      enctype="multipart/form-data"
+      onSubmit={formik.handleSubmit}>
+      <StyledPaper
+        sx={
+          isClicked
+            ? { height: { sm: "306.5px", lg: "185px" } }
+            : { height: "67px" }
+        }
+        elevation={3}
+        onClick={handleExpand}
+        isClicked={isClicked}>
         <Stack
-          flexGrow={1}
-          justifyContent="space-between"
-          spacing={2}
-          position="relative"
-          height="100%">
-          <Item
+          display={"flex"}
+          sx={{ flexDirection: { sm: "column", lg: "row" }, gap: "5px" }}
+          justifyContent={"space-between"}
+          flexGrow={1}>
+          <Box
             sx={
               isClicked
-                ? { display: "block", width: "fit-content" }
+                ? { display: "block", width: { sm: "100%", lg: "30%" } }
                 : { display: "none" }
             }>
-            <Typography variant="body1" contentEditable>
-              {formik.values.title}
-            </Typography>
-          </Item>
-          <Item
-            className={styles["take-note"]}
-            sx={isClicked ? { left: "50%" } : { left: "5%" }}
-            contentEditable>
-            <Typography variant="body2">{formik.values.content}</Typography>
-          </Item>
-          <Item
-            sx={
-              isClicked
-                ? {
-                    visibility: "visible",
-                    display: "flex",
-                    justifyContent: "end",
-                  }
-                : { visibility: "hidden" }
-            }>
-            <Button onClick={handleClose}>Close</Button>
-          </Item>
+            <FileField
+              image={formik.values.image}
+              onImageChange={handleImageChange}
+              onBlur={formik.handleBlur}
+              initialPreviewImage={formik.values.previewImage}
+              error={formik.touched.image && Boolean(formik.errors.image)}
+              helperText={formik.touched.image && formik.errors.image}
+              className={styles["file-input_large"]}
+            />
+          </Box>
+          <Stack
+            flexGrow={1}
+            justifyContent="space-between"
+            alignItems={"space-between"}
+            spacing={2}
+            position="relative">
+            <Item
+              sx={
+                isClicked
+                  ? { display: "block", width: "fit-content" }
+                  : { display: "none" }
+              }>
+              <Input
+                variant="body2"
+                id="title"
+                name="title"
+                onChange={formik.handleChange}
+                placeholder={formik.values.title}
+              />
+            </Item>
+            <Item
+              className={styles["take-note"]}
+              sx={
+                isClicked
+                  ? { visibility: "hidden", left: "50%" }
+                  : { visibility: "visible", left: "5%" }
+              }>
+              Take A Note...
+            </Item>
+            <Item
+              className={styles["take-note"]}
+              sx={
+                isClicked
+                  ? { visibility: "visible", left: "50%" }
+                  : { visibility: "hidden", left: "5%" }
+              }>
+              <Input
+                variant="body2"
+                id="content"
+                name="content"
+                onChange={formik.handleChange}
+                placeholder={formik.values.content}
+              />
+            </Item>
+            <Item
+              sx={
+                isClicked
+                  ? {
+                      visibility: "visible",
+                      display: "flex",
+                      justifyContent: "end",
+                    }
+                  : { visibility: "hidden" }
+              }>
+              <Button sx={{ color: "#222222" }} type="submit">
+                Close
+              </Button>
+            </Item>
+          </Stack>
         </Stack>
-      </Stack>
-    </StyledPaper>
+      </StyledPaper>
+    </form>
   );
 };
 

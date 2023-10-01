@@ -35,7 +35,7 @@ const FileField = ({
   };
 
   return (
-    <Box component={"div"} sx={{ width: "100%", height: "100%" }}>
+    <Box component={"div"} sx={{ width: "100%", height: "100%" ,backgroundColor:"#fafafa"}}>
       <label
         htmlFor="file-input"
         className={

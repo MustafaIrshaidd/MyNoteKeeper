@@ -1,26 +1,15 @@
-const defaultOptions = {
-  method: "GET",
-  mode: "cors",
-  cache: "default",
-  credentials: "same-origin",
-  headers: {
-    "Content-Type": "application/json",
-  },
-  redirect: "follow",
-  referrerPolicy: "no-referrer",
-};
+import axios from "axios";
 
-export const apiUtils = {
+const apiUtils = {
   request: async (url, options = {}) => {
     try {
-      const response = await fetch(url, { ...defaultOptions, ...options });
+      const response = await axios({ url, ...options });
 
-      if (!response.ok) {
+      if (response.status < 200 || response.status >= 300) {
         throw new Error(`Request failed with status: ${response.status}`);
       }
 
-      const data = await response.json();
-      return data;
+      return response.data;
     } catch (error) {
       console.log("Error:", error);
       throw error;
@@ -28,26 +17,28 @@ export const apiUtils = {
   },
 
   get: async (url, options = {}) => {
-    return apiUtils.request(url, { method: "GET", ...options });
+    return apiUtils.request(url, { method: "get", ...options });
   },
 
   post: async (url, data, options = {}) => {
     return apiUtils.request(url, {
-      method: "POST",
-      body: JSON.stringify(data),
+      method: "post",
+      data: data,
       ...options,
     });
   },
 
   put: async (url, data, options = {}) => {
     return apiUtils.request(url, {
-      method: "PUT",
-      body: JSON.stringify(data),
+      method: "put",
+      data: JSON.stringify(data),
       ...options,
     });
   },
 
   delete: async (url, options = {}) => {
-    return apiUtils.request(url, { method: "DELETE", ...options });
+    return apiUtils.request(url, { method: "delete", ...options });
   },
 };
+
+export default apiUtils;
