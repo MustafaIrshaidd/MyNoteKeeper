@@ -50,8 +50,6 @@ const AddNote = () => {
     console.log(await addNote(formData));
 
     const title = document.getElementById("title").innerText="";
-    // formik.setFieldValue("title", "title");
-    // formik.setFieldValue("content", "Add A Note...");
 
     setIsClicked(false);
   };
