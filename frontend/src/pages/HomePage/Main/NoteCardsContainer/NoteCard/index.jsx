@@ -12,8 +12,16 @@ const NoteCard = ({ data, isLoading, onDelete }) => {
   };
 
   return (
-    <Card sx={{ width:"100%", position: "relative" }}>
-      <CardActionArea>
+    <Card sx={{ width: "100%", position: "relative" }}>
+      <CardActionArea
+        sx={{
+          position: "relative",
+          "@media (hover: hover)": {
+            "&:hover .delete-icon": {
+              visibility: "visible",
+            },
+          },
+        }}>
         {isLoading ? (
           <Skeleton variant="rectangular" height={"140px"}></Skeleton>
         ) : (
@@ -26,12 +34,14 @@ const NoteCard = ({ data, isLoading, onDelete }) => {
         )}
 
         {isLoading ? (
-          <Box sx={{ pt: 2.5 }} display={"flex"} flexDirection={"column"} gap={"10px"}>
-            <Skeleton  variant="rectangular" height={"30px"}></Skeleton>
+          <Box
+            sx={{ pt: 2.5, pb: 2.5, width: "90%", margin: "auto" }}
+            display={"flex"}
+            flexDirection={"column"}
+            gap={"10px"}>
+            <Skeleton variant="rectangular" height={"30px"}></Skeleton>
             <Skeleton variant="rectangular" width={"50%"}></Skeleton>
-            <Skeleton
-              variant="rectangular"
-              width={"20%"}></Skeleton>
+            <Skeleton variant="rectangular" width={"20%"}></Skeleton>
           </Box>
         ) : (
           <CardContent>
@@ -46,19 +56,25 @@ const NoteCard = ({ data, isLoading, onDelete }) => {
             </Typography>
           </CardContent>
         )}
+        {!isLoading && (
+          <DeleteOutlineIcon
+            onClick={handleDeleteClick}
+            className="delete-icon"
+            sx={{
+              visibility: "visible",
+              position: "absolute",
+              right: "16px",
+              bottom: "17px",
+              "@media (hover: hover)": {
+                visibility: "hidden",
+                "&:hover": {
+                  visibility: "visible !important",
+                  cursor: "pointer",
+                },
+              },
+            }}></DeleteOutlineIcon>
+        )}
       </CardActionArea>
-      {!isLoading && (
-        <DeleteOutlineIcon
-          onClick={handleDeleteClick}
-          sx={{
-            "&hover": {
-              cursor: "pointer",
-            },
-            position: "absolute",
-            right: "16px",
-            bottom: "17px",
-          }}></DeleteOutlineIcon>
-      )}
     </Card>
   );
 };

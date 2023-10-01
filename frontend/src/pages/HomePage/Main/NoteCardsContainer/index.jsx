@@ -1,5 +1,5 @@
-import { Grid } from "@mui/material";
 import React from "react";
+import { Grid } from "@mui/material";
 import NoteCard from "./NoteCard";
 
 const NoteCardsContainer = () => {
@@ -11,38 +11,16 @@ const NoteCardsContainer = () => {
     image: "",
     _id: "sdat32523rfasfrq",
   };
+
+  const NoteCards = Array.from({ length: iterationCount });
+
   return (
     <Grid container spacing={2}>
-      <Grid item xs={12} md={6} lg={2.4}>
-        <NoteCard data={data} isLoading={false}></NoteCard>
-      </Grid>
-      <Grid item xs={12} md={6} lg={2.4}>
-        <NoteCard data={data} isLoading={false}></NoteCard>
-      </Grid>
-      <Grid item xs={12} md={6} lg={2.4}>
-        <NoteCard data={data} isLoading={false}></NoteCard>
-      </Grid>
-      <Grid item xs={12} md={6} lg={2.4}>
-        <NoteCard data={data} isLoading={false}></NoteCard>
-      </Grid>
-      <Grid item xs={12} md={6} lg={2.4}>
-        <NoteCard data={data} isLoading={false}></NoteCard>
-      </Grid>
-      <Grid item xs={12} md={6} lg={2.4}>
-        <NoteCard data={data} isLoading={false}></NoteCard>
-      </Grid>
-      <Grid item xs={12} md={6} lg={2.4}>
-        <NoteCard data={data} isLoading={false}></NoteCard>
-      </Grid>
-      <Grid item xs={12} md={6} lg={2.4}>
-        <NoteCard data={data} isLoading={false}></NoteCard>
-      </Grid>
-      <Grid item xs={12} md={6} lg={2.4}>
-        <NoteCard data={data} isLoading={false}></NoteCard>
-      </Grid>
-      <Grid item xs={12} md={6} lg={2.4}>
-        <NoteCard data={data} isLoading={false}></NoteCard>
-      </Grid>
+      {NoteCards.map((_, index) => (
+        <Grid item key={index} xs={12} md={6} lg={2.4}>
+          <NoteCard data={data} isLoading={true} />
+        </Grid>
+      ))}
     </Grid>
   );
 };
