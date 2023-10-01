@@ -12,7 +12,7 @@ const NoteCard = ({ data, isLoading, onDelete }) => {
   };
 
   return (
-    <Card sx={{ maxWidth: 345, position: "relative" }}>
+    <Card sx={{ width:"100%", position: "relative" }}>
       <CardActionArea>
         {isLoading ? (
           <Skeleton variant="rectangular" height={"140px"}></Skeleton>

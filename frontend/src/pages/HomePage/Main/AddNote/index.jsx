@@ -5,10 +5,10 @@ import Stack from "@mui/material/Stack";
 import { styled } from "@mui/material/styles";
 import styles from "./styles.module.css";
 import shadows from "@mui/material/styles/shadows";
-import FileField from "../FileField";
+import FileField from "../../../../components/FileField";
 import { useFormik } from "formik";
-import FileUploadService from "../../services/FileUploadService";
-import { addNote } from "../../services/notesService";
+import FileUploadService from "../../../../services/FileUploadService";
+import { addNote } from "../../../../services/notesService";
 
 const Item = styled(Paper)(({ theme }) => ({
   backgroundColor: theme.palette.mode === "dark" ? "#1A2027" : "#fff",
@@ -48,8 +48,6 @@ const AddNote = () => {
     const formData = FileUploadService.newUpload(inputs, image);
 
     console.log(await addNote(formData));
-
-    const title = document.getElementById("title").innerText="";
 
     setIsClicked(false);
   };
@@ -128,7 +126,7 @@ const AddNote = () => {
               sx={
                 isClicked
                   ? { visibility: "hidden", left: "50%" }
-                  : { visibility: "visible", left: "5%" }
+                  : { visibility: "visible", left: "70px" }
               }>
               Take A Note...
             </Item>
