@@ -1,11 +1,13 @@
 import "./App.css";
+import LoaderProvider from "./contexts/LoaderContext";
 import HomePage from "./pages/HomePage";
 
 function App() {
-  
   return (
     <>
-      <HomePage></HomePage>
+      <LoaderProvider>
+        <HomePage/>
+      </LoaderProvider>
     </>
   );
 }

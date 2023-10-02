@@ -6,6 +6,7 @@ import Typography from "@mui/material/Typography";
 import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
 import { Box, CardActionArea, Skeleton } from "@mui/material";
 
+
 const NoteCard = ({ data, isLoading, onDelete }) => {
   const handleDeleteClick = () => {
     onDelete(data?._id);
@@ -28,8 +29,8 @@ const NoteCard = ({ data, isLoading, onDelete }) => {
           <CardMedia
             component="img"
             height="140"
-            image="/static/images/cards/contemplative-reptile.jpg"
-            alt="green iguana"
+            image={`http://localhost:3000/uploads/notes/${data?.image}`}
+            alt="image not found"
           />
         )}
 

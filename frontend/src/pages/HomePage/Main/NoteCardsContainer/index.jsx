@@ -1,26 +1,32 @@
-import React from "react";
+import React, { useContext } from "react";
 import { Grid } from "@mui/material";
 import NoteCard from "./NoteCard";
+import { LoaderContext } from "../../../../contexts/LoaderContext";
+import { NotesContext } from "../../../../contexts/NotesContext";
 
 const NoteCardsContainer = () => {
-  const iterationCount = 10;
-  const data = {
-    title: "hello",
-    content: "there",
-    createdAt: "29/10/2023",
-    image: "",
-    _id: "sdat32523rfasfrq",
-  };
+  const { isLoading } = useContext(LoaderContext);
+  const { data } = useContext(NotesContext);
 
-  const NoteCards = Array.from({ length: iterationCount });
+  const LoadingCardsNumber = 10;
 
   return (
-    <Grid container spacing={2}>
-      {NoteCards.map((_, index) => (
-        <Grid item key={index} xs={12} md={6} lg={2.4}>
-          <NoteCard data={data} isLoading={true} />
-        </Grid>
-      ))}
+    <Grid container spacing={2} minHeight={"calc(100vh - 370px)"}>
+      {isLoading
+        ? Array(LoadingCardsNumber)
+            .fill(0)
+            .map(() => {
+              return (
+                <Grid item xs={12} md={6} lg={2.4}>
+                  <NoteCard data={{}} isLoading={isLoading} />
+                </Grid>
+              );
+            })
+        : data.map((item, index) => (
+            <Grid item xs={12} md={6} lg={2.4}>
+              <NoteCard data={item} />
+            </Grid>
+          ))}
     </Grid>
   );
 };
