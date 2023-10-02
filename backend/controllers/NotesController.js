@@ -7,6 +7,7 @@ export default {
   getAllNotes: async (req, res) => {
     const pageNumber = req.query.page;
     const startIndex = (pageNumber - 1) * 10;
+    let totalPageCount;
     try {
       let result;
       if (isNaN(pageNumber) || pageNumber < 1) {
@@ -16,11 +17,13 @@ export default {
           skip: startIndex,
           limit: 10,
         });
+        totalNotes = await NotesModel.countDocuments();
+        totalPageCount = Math.ceil(totalNotes / 10);
       }
       if (!result) {
         return res.status(404).json({ message: "no results" });
       }
-      res.json(result);
+      res.json({ pages: totalPageCount, result: result });
     } catch (error) {
       console.error("Error:", error);
       res.status(500).send("Internal Server Error");
@@ -43,6 +46,8 @@ export default {
     const pageNumber = req.query.page;
     const startIndex = (pageNumber - 1) * 10;
     const searchTerm = req.params.title;
+    let totalNotes;
+    let totalPageCount;
     try {
       let result;
       if (isNaN(pageNumber) || pageNumber < 1) {
@@ -61,10 +66,14 @@ export default {
           }
         );
       }
+      totalNotes = await NoteModel.countDocuments({
+        title: { $regex: searchTerm, $options: "i" },
+      });
+      totalPageCount = Math.ceil(totalNotes / 10);
       if (!result) {
         return res.status(404).json({ message: "no results" });
       }
-      res.json(result);
+      res.json({ pages: totalPageCount, result: result });
     } catch (error) {
       console.error("Error:", error);
       res.status(500).send("Internal Server Error");
@@ -72,16 +81,26 @@ export default {
   },
   addNote: async (req, res) => {
     const { title, content } = req.body;
+    let image, fileName;
 
-    // const image = req.file.path;
-    // const fileName = path.basename(image);
-    const fileName = req.file.filename;
+    try {
+      if (req.file) {
+        image = req.file.path;
+        fileName = path.basename(image);
+      } else {
+        image = null;
+        fileName = null;
+      }
 
-    const newNote = new NoteModel({ title, content, image: fileName });
+      const newNote = new NoteModel({ title, content, image: fileName });
 
-    const response = await newNote.save();
+      const response = await newNote.save();
 
-    res.send(response);
+      res.send(response);
+    } catch (error) {
+      console.error("Error:", error);
+      res.status(500).send("Internal Server Error");
+    }
   },
   deleteNoteByID: async (req, res) => {
     try {
