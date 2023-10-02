@@ -7,6 +7,7 @@ export default {
   getAllNotes: async (req, res) => {
     const pageNumber = req.query.page;
     const startIndex = (pageNumber - 1) * 10;
+    let totalNotes;
     let totalPageCount;
     try {
       let result;

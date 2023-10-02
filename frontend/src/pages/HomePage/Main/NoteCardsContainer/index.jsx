@@ -22,7 +22,7 @@ const NoteCardsContainer = () => {
                 </Grid>
               );
             })
-        : data.map((item, index) => (
+        : data.result.map((item, index) => (
             <Grid item xs={12} md={6} lg={2.4}>
               <NoteCard data={item} />
             </Grid>

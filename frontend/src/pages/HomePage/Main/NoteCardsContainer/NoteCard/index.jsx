@@ -4,8 +4,8 @@ import CardContent from "@mui/material/CardContent";
 import CardMedia from "@mui/material/CardMedia";
 import Typography from "@mui/material/Typography";
 import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
+import SentimentSatisfiedAltIcon from "@mui/icons-material/SentimentSatisfiedAlt";
 import { Box, CardActionArea, Skeleton } from "@mui/material";
-
 
 const NoteCard = ({ data, isLoading, onDelete }) => {
   const handleDeleteClick = () => {
@@ -25,15 +25,26 @@ const NoteCard = ({ data, isLoading, onDelete }) => {
         }}>
         {isLoading ? (
           <Skeleton variant="rectangular" height={"140px"}></Skeleton>
-        ) : (
+        ) : data.image ? (
           <CardMedia
             component="img"
             height="140"
-            image={`http://localhost:3000/uploads/notes/${data?.image}`}
+            image={`http://localhost:3000/uploads/notes/${data.image}`}
             alt="image not found"
           />
+        ) : (
+          <Box
+            height={"140px"}
+            width={"100%"}
+            color={"darkgray"}
+            display={"flex"}
+            flexDirection={"column"}
+            justifyContent={"center"}
+            alignItems={"center"}>
+            <SentimentSatisfiedAltIcon />
+            <Typography variant="caption">Why Not Upload Image</Typography>
+          </Box>
         )}
-
         {isLoading ? (
           <Box
             sx={{ pt: 2.5, pb: 2.5, width: "90%", margin: "auto" }}

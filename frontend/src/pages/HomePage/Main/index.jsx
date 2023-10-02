@@ -3,22 +3,11 @@ import React, { useContext } from "react";
 import AddNote from "./AddNote";
 import NoteCardsContainer from "./NoteCardsContainer";
 import { LoaderContext } from "../../../contexts/LoaderContext";
+import { NotesContext } from "../../../contexts/NotesContext";
 
-const Main = ({setPageNumber}) => {
-  // const [pageNumber, setPageNumber] = useState(1);
+const Main = ({ setPageNumber }) => {
   const { startLoader } = useContext(LoaderContext);
-
-  // const { data, error, setData } = useFetch(
-  //   `http://localhost:3000/notes?page=${pageNumber}`
-  // );
-
-  // useEffect(() => {
-  //   if (data) {
-  //     stopLoader();
-  //   } else {
-  //     startLoader();
-  //   }
-  // }, [data]);
+  const { data } = useContext(NotesContext);
 
   const handlePageChange = (event, page) => {
     startLoader();
@@ -39,11 +28,11 @@ const Main = ({setPageNumber}) => {
             </Container>
           </Box>
           <Box component="section">
-            <NoteCardsContainer/>
+            <NoteCardsContainer />
           </Box>
           <Box component="section" margin={"auto"}>
             <Pagination
-              count={10}
+              count={data?.pages}
               variant="outlined"
               color="primary"
               onChange={handlePageChange}
