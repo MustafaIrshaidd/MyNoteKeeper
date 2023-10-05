@@ -5,11 +5,34 @@ import CardMedia from "@mui/material/CardMedia";
 import Typography from "@mui/material/Typography";
 import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
 import SentimentSatisfiedAltIcon from "@mui/icons-material/SentimentSatisfiedAlt";
-import { Box, CardActionArea, Skeleton } from "@mui/material";
+import {
+  Box,
+  Button,
+  CardActionArea,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogContentText,
+  DialogTitle,
+  Skeleton,
+} from "@mui/material";
+
+import Slide from "@mui/material/Slide";
+import { deleteNote } from "../../../../../services/notesService";
+
+const Transition = React.forwardRef(function Transition(props, ref) {
+  return <Slide direction="up" ref={ref} {...props} />;
+});
 
 const NoteCard = ({ data, isLoading, onDelete }) => {
-  const handleDeleteClick = () => {
-    onDelete(data?._id);
+  const [open, setOpen] = React.useState(false);
+  const handleOpen = () => setOpen(true);
+  const handleClose = async (event) => {
+    setOpen(false);
+    if (event.target.innerText === "DELETE") {
+      await deleteNote(data.id);
+      console.log("Note is Deleted")
+    }
   };
 
   return (
@@ -69,9 +92,9 @@ const NoteCard = ({ data, isLoading, onDelete }) => {
           </CardContent>
         )}
         {!isLoading && (
-          <DeleteOutlineIcon
-            onClick={handleDeleteClick}
-            className="delete-icon"
+          <Button
+            onClick={handleOpen}
+            variant="outlined"
             sx={{
               visibility: "visible",
               position: "absolute",
@@ -84,8 +107,37 @@ const NoteCard = ({ data, isLoading, onDelete }) => {
                   cursor: "pointer",
                 },
               },
-            }}></DeleteOutlineIcon>
+            }}>
+            <DeleteOutlineIcon className="delete-icon"></DeleteOutlineIcon>
+          </Button>
         )}
+        <Dialog
+          open={open}
+          onClose={handleClose}
+          fullWidth
+          minWidth={"lg"}
+          TransitionComponent={Transition}
+          aria-labelledby="alert-dialog-title"
+          aria-describedby="alert-dialog-description">
+          <DialogTitle id="alert-dialog-title">
+            {"Confirm Deletion"}
+          </DialogTitle>
+          <DialogContent>
+            <DialogContentText id="alert-dialog-description">
+              Do you really want to DELETE this note ?
+            </DialogContentText>
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={handleClose}>Close</Button>
+            <Button
+              onClick={handleClose}
+              variant="contained"
+              autoFocus
+              color="error">
+              Delete
+            </Button>
+          </DialogActions>
+        </Dialog>
       </CardActionArea>
     </Card>
   );

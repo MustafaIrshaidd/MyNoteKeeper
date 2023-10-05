@@ -2,15 +2,12 @@ import { Box, Container, Pagination, Stack } from "@mui/material";
 import React, { useContext } from "react";
 import AddNote from "./AddNote";
 import NoteCardsContainer from "./NoteCardsContainer";
-import { LoaderContext } from "../../../contexts/LoaderContext";
 import { NotesContext } from "../../../contexts/NotesContext";
 
 const Main = ({ setPageNumber }) => {
-  const { startLoader } = useContext(LoaderContext);
   const { data } = useContext(NotesContext);
 
   const handlePageChange = (event, page) => {
-    startLoader();
     setPageNumber(page);
   };
 

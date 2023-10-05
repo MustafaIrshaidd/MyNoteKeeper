@@ -47,7 +47,7 @@ const AddNote = () => {
 
     const formData = FileUploadService.newUpload(inputs, image);
 
-    console.log(await addNote(formData));
+    await addNote(formData);
 
     setIsClicked(false);
   };
