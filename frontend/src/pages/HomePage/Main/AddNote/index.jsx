@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Box, Button, Input } from "@mui/material";
+import { Box, Button, CircularProgress, IconButton, Input, Snackbar } from "@mui/material";
 import Paper from "@mui/material/Paper";
 import Stack from "@mui/material/Stack";
 import { styled } from "@mui/material/styles";
@@ -9,6 +9,7 @@ import FileField from "../../../../components/FileField";
 import { useFormik } from "formik";
 import FileUploadService from "../../../../services/FileUploadService";
 import { addNote } from "../../../../services/notesService";
+import CloseIcon from '@mui/icons-material/Close';
 
 const Item = styled(Paper)(({ theme }) => ({
   backgroundColor: theme.palette.mode === "dark" ? "#1A2027" : "#fff",
@@ -37,25 +38,21 @@ const initialValues = {
 
 const AddNote = () => {
   const [isClicked, setIsClicked] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+
+  const [open, setOpen] = React.useState(false);
 
   const handleExpand = () => {
     setIsClicked(true);
   };
 
-  const handleClose = async () => {
-    const { image, previewImage, ...inputs } = formik.values;
+  const handleCloseSnackbar = (event, reason) => {
+    if (reason === 'clickaway') {
+      return;
+    }
 
-    const formData = FileUploadService.newUpload(inputs, image);
-
-    await addNote(formData);
-
-    setIsClicked(false);
+    setOpen(false);
   };
-
-  const formik = useFormik({
-    initialValues: initialValues,
-    onSubmit: handleClose,
-  });
 
   const handleImageChange = async (file) => {
     await formik.setFieldValue("image", file);
@@ -65,6 +62,38 @@ const AddNote = () => {
 
     if (!formik.touched.image) await formik.setFieldTouched("image", true);
   };
+
+  const handleSubmit = async () => {
+    const { image, previewImage, ...inputs } = formik.values;
+
+    const formData = FileUploadService.newUpload(inputs, image);
+
+    setIsLoading(true);
+    await addNote(formData);
+    setIsLoading(false);
+
+    setOpen(true);
+
+    setIsClicked(false);
+  };
+
+  const action = (
+    <React.Fragment>
+      <IconButton
+        size="small"
+        aria-label="close"
+        color="inherit"
+        onClick={handleCloseSnackbar}
+      >
+        <CloseIcon fontSize="small" />
+      </IconButton>
+    </React.Fragment>
+  );
+
+  const formik = useFormik({
+    initialValues: initialValues,
+    onSubmit: handleSubmit,
+  });
 
   return (
     <form
@@ -149,19 +178,32 @@ const AddNote = () => {
               sx={
                 isClicked
                   ? {
-                      visibility: "visible",
-                      display: "flex",
-                      justifyContent: "end",
-                    }
+                    visibility: "visible",
+                    display: "flex",
+                    justifyContent: "end",
+                  }
                   : { visibility: "hidden" }
               }>
-              <Button sx={{ color: "#222222" }} type="submit">
-                Close
-              </Button>
+              {
+                isLoading ? <CircularProgress /> : <Button sx={{ color: "#222222" }} type="submit">
+                  Close
+                </Button>
+              }
+
+
+
             </Item>
           </Stack>
         </Stack>
+
       </StyledPaper>
+      <Snackbar
+        open={open}
+        autoHideDuration={6000}
+        onClose={handleCloseSnackbar}
+        message="Note archived"
+        action={action}
+      />
     </form>
   );
 };

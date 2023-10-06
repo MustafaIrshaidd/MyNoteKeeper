@@ -6,8 +6,10 @@ import Typography from "@mui/material/Typography";
 import InputBase from "@mui/material/InputBase";
 import SearchIcon from "@mui/icons-material/Search";
 import styles from "./styles.module.css";
-import React from "react";
+import React, { useContext } from "react";
 import { Container } from "@mui/material";
+import { NotesContext } from "../../../contexts/NotesContext";
+import { debounce } from "lodash";
 
 const Search = styled("div")(({ theme }) => ({
   position: "relative",
@@ -51,6 +53,17 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
 }));
 
 const Navbar = () => {
+  const { setSearchQuery } = useContext(NotesContext)
+
+  const debouncedHandleSearchChange = debounce((searchValue) => {
+    setSearchQuery(searchValue);
+  }, 300);
+
+  const handleSearchChange = (event) => {
+    const searchValue = event.target.value;
+    debouncedHandleSearchChange(searchValue);
+  };
+
   return (
     <Box sx={{ flexGrow: 1 }}>
       <AppBar className={styles.appBar} position="static">
@@ -68,6 +81,7 @@ const Navbar = () => {
                 <SearchIcon />
               </SearchIconWrapper>
               <StyledInputBase
+                onChange={handleSearchChange}
                 placeholder="Search…"
                 inputProps={{ "aria-label": "search" }}
               />

@@ -14,19 +14,19 @@ const NoteCardsContainer = () => {
     <Grid container spacing={2} minHeight={"calc(100vh - 370px)"}>
       {isLoading
         ? Array(LoadingCardsNumber)
-            .fill(0)
-            .map(() => {
-              return (
-                <Grid item xs={12} md={6} lg={2.4}>
-                  <NoteCard data={{}} isLoading={isLoading} />
-                </Grid>
-              );
-            })
-        : data.result.map((item, index) => (
-            <Grid item xs={12} md={6} lg={2.4}>
-              <NoteCard data={item} />
-            </Grid>
-          ))}
+          .fill(0)
+          .map(() => {
+            return (
+              <Grid item xs={12} md={6} lg={2.4}>
+                <NoteCard data={{}} isLoading={isLoading} />
+              </Grid>
+            );
+          })
+        : data.result.map((item) => (
+          <Grid item xs={12} md={6} lg={2.4}>
+            <NoteCard data={item} />
+          </Grid>
+        ))}
     </Grid>
   );
 };

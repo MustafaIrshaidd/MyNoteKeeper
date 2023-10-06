@@ -16,7 +16,6 @@ import {
   DialogTitle,
   Skeleton,
 } from "@mui/material";
-
 import Slide from "@mui/material/Slide";
 import { deleteNote } from "../../../../../services/notesService";
 

@@ -18,8 +18,8 @@ const HomePage = () => {
   return (
     <>
       <Box component="div">
-        <Navbar></Navbar>
         <NotesProvider page={pageNumber}>
+          <Navbar/>
           <Main setPageNumber={handlePageNumberChange} />
         </NotesProvider>
       </Box>
